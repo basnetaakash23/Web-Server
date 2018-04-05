@@ -7,13 +7,22 @@ def search_for_file(filename):
 	query = filename
 	#print(query)
 	for root, dirs, files in os.walk('/Users/aakashbasnet/Desktop/'):
-		for dir in dirs:
-			if(query in dir):
-				print(query)
-				print(dir)
-				print('\n')
+		for file in files:
+			if(query == file):
+				print(file)
+				print(os.path.abspath(os.path.join(root, file)))
+				f = open(os.path.abspath(os.path.join(root, file)),'rb')
+				l = f.read(1024)
+				while (l):
+					print(l)
+					l = f.read(1024)
+					print('\n')
 
+				f.close()
+				
 
-search_for_file('sockets')
+directory_search = raw_input("Input the name of the file you want to receive:")
+print(directory_search)
+search_for_file(directory_search)
 
 

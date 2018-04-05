@@ -3,17 +3,18 @@ from os.path import join
 from socket import *
 
 def search_for_file(filename):
+	
 	query = filename
 	#print(query)
 	for root, dirs, files in os.walk('/Users/aakashbasnet/Desktop/'):
-		for dir_ in dirs:
-			if(query in dir_):
+		for file_ in files:
+			if file_ == filename:
 				#print(query)
 				#print(dirs)
 				#print('\n')
-				return "File has been found"
+				file_path = os.path.abspath(os.path.join(root, file_))
 
-	return "File not found"
+	return file_path
 
 
 serverPort = 12000
@@ -28,7 +29,17 @@ while 1:
 	
 	file_name = file_name.decode()
 	print("The file name is", file_name)
-	reply = search_for_file(file_name)
+	path_of_file = search_for_file(file_name)
+	f = open(path_of_file,'rb')
+	l = f.read(1024)
+	while (l):
+		connectionSocket.send(l)
+		l = f.read(1024)
+
+	f.close()
+	connectionSocket.send("Connection has ended")
+	connectionSocket.close()
+
 	#capitalizedSentence = sentence.upper()
 	# reply = "File not Found!"
 	# for root, dirs, files in os.walk('/Users/aakashbasnet/Desktop/'):
@@ -39,8 +50,7 @@ while 1:
 	# 			reply = "File you requested has been found!"
 
 	#reply = search_for_file(file_name)
-	connectionSocket.send(reply.encode())
-	connectionSocket.close()
+	
 
 
 
